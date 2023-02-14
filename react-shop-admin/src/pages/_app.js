@@ -5,11 +5,11 @@ import '@styles/tailwind.css';
 export default function App({ Component, pageProps }) {
   return (
     <>
-    <ProviderAuth>
-      <MainLayout>
-        <Component {...pageProps} />
-      </MainLayout>
-    </ProviderAuth>
+      <ProviderAuth>
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
+      </ProviderAuth>
     </>
   );
 }
