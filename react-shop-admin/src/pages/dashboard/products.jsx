@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import Modal from '@common/Modal';
 import { PlusIcon, XCircleIcon } from '@heroicons/react/solid';
+import Link from 'next/link';
+import Modal from '@common/Modal';
 import FormProduct from '@components/FormProduct';
 import axios from 'axios';
 import endPoints from '@services/api';
@@ -38,7 +39,7 @@ export default function Products() {
 
   return (
     <>
-      <Alert alert={alert} handleClose={toggleAlert} />
+    <Alert alert={alert} handleClose={toggleAlert} />
       <div className="lg:flex lg:items-center lg:justify-between mb-8">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Lista de Productos</h2>
@@ -105,9 +106,9 @@ export default function Products() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.id}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="/edit" className="text-indigo-600 hover:text-indigo-900">
-                          Edit
-                        </a>
+                        <Link href={`/dashboard/edit/${product.id}`} className="text-indigo-600 hover:text-indigo-900">
+                          Edit 
+                        </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <XCircleIcon className="flex-shrink-0 h-6 w-6 text-gray-400 cursor-pointer" aria-hidden="true" onClick={() => handleDelete(product.id)} />

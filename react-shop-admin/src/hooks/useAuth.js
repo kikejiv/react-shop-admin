@@ -29,7 +29,7 @@ function useProviderAuth() {
       const token = access_token.access_token;
       Cookie.set('token', token, { expires: 5 });
       console.log(access_token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       const { data: user } = await axios.get(endPoints.auth.profile);
       console.log(user);
       setUser(user);
@@ -37,10 +37,19 @@ function useProviderAuth() {
   };
 
   const [error, setError] = useState();
+
+  const logout = () => {
+    Cookie.remove('token');
+    setUser(null);
+    delete axios.defaults.headers.Authorization;
+    window.location.href = '/Login';
+  };
+
   return {
     user,
     error,
     setError,
     signIn,
+    logout,
   };
 }

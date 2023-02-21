@@ -1,9 +1,12 @@
 import { useRef } from 'react';
-import { ValidationShema } from '@common/ValidationShema';
-import addProduct from '@services/api/product';
+import { useRouter } from 'next/router';
+import { ValidationSchema } from '@common/ValidationSchema';
+import { addProduct, updateProduct } from '@services/api/product';
 
 export default function FormProduct({ setOpen, setAlert, product }) {
+  const router = useRouter();
   const formRef = useRef(null);
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(formRef.current);
@@ -12,9 +15,32 @@ export default function FormProduct({ setOpen, setAlert, product }) {
       price: parseInt(formData.get('price')),
       description: formData.get('description'),
       categoryId: parseInt(formData.get('category')),
-      images: [formData.get('images').name],
+      images: formData.get('images').name? [formData.get('images').name]: null,
     };
 
+    if(product) {
+      !data.images && delete data.images;
+
+      const updateValidation = await ValidationSchema.validate(data).then(() => {
+        updateProduct(product.id, data).then(() =>{
+          router.push('/dashboard/products/');
+          setAlert({
+            active: true, 
+            message: 'Product updated successfully',
+            type: 'success',
+            autoClose: false,
+          });
+        setTimeout(closeWindow, 3000);
+      });
+   }).catch(function(err) {
+      setAlert({
+        active: true,
+        message: err.message,
+        type: 'error',
+        autoClose: false,
+      });
+    })
+    }else {
     addProduct(data)
       .then(() => {
         setAlert({
@@ -33,8 +59,10 @@ export default function FormProduct({ setOpen, setAlert, product }) {
           autoClose: false,
         });
       });
+      
+    }
 
-    const valid = await ValidationShema.validate(data).catch(function (err) {
+    const valid = await ValidationSchema.validate(data).catch(function (err) {
       let errorValidate = err.errors;
       let errorMessage = '';
       for (const [key, value] of Object.entries(errorValidate)) {
@@ -46,7 +74,6 @@ export default function FormProduct({ setOpen, setAlert, product }) {
     console.log({ valid });
   };
   return (
-    <>
       <form ref={formRef} onSubmit={handleSubmit}>
         <div className="overflow-hidden">
           <div className="px-4 py-5 bg-white sm:p-6">
@@ -135,6 +162,5 @@ export default function FormProduct({ setOpen, setAlert, product }) {
           </div>
         </div>
       </form>
-    </>
   );
 }
