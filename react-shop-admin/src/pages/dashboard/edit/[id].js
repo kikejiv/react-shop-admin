@@ -7,12 +7,10 @@ import axios from 'axios';
 import endPoints from '@services/api';
 
 export default function Edit() {
-  const [open, setOpen] = useState(false);
+  const [setOpen] = useState(false);
   const { alert, setAlert, toggleAlert } = useAlert;
   const [product, setProduct] = useState({});
   const router = useRouter();
-  
-  
 
   useEffect(() => {
     const { id } = router.query;
@@ -28,5 +26,5 @@ export default function Edit() {
   <>
     <Alert alert={alert} handleClose={toggleAlert} />;
     <FormProduct setOpen={setOpen} setAlert={setAlert} product={product} />;
-  </>
+  </>;
 }
